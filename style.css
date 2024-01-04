@@ -1,0 +1,105 @@
+*,
+*::before,
+*::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: inherit;
+}
+
+:root {
+    --shadow: 3px 1px 9px 1px rgba(0, 0, 0, 0.17);
+    --shadow2: 3px 2px 9px 1px rgba(21, 17, 17, 0.44);
+    --color1: rgb(194, 194, 216);
+    --color2: rgb(79, 79, 200)
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    box-sizing: border-box;
+    font-family: fantasy;
+}
+
+.container {
+    outline: 2px solid red;
+    padding: 0 2rem;
+    display: grid;
+    place-items: center;
+    height: 100vh;
+    background: linear-gradient(rgb(10, 2, 60), rgb(2, 2, 35));
+
+    .dial-pad {
+        background: linear-gradient(rgb(17, 17, 77), rgb(15, 15, 89));
+        height: 100%;
+        width: 35%;
+        border-radius: 5px;
+        box-shadow: var(--shadow);
+
+        padding: 1rem 4rem;
+        display: grid;
+        grid-template-rows: 1fr 2fr;
+
+        .output-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4rem;
+
+            input {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 2rem;
+                height: 2rem;
+                background-color: transparent;
+                border: none;
+                color: var(--color1);
+                outline: 1px solid var(--color1);
+                border-radius: 2rem;
+                text-align: center;
+                font-size: 3rem;
+                cursor: pointer;
+                caret-color: transparent;
+
+                &:focus {
+                    border: 2px solid var(--color2);
+                }
+            }
+
+
+        }
+
+        .input {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            place-items: center;
+
+            span {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 8rem;
+                width: 8rem;
+                font-size: 2rem;
+                font-weight: bold;
+                border-radius: 50%;
+                background-color: rgb(79, 79, 130);
+                color: var(--color1);
+                box-shadow: var(--shadow2);
+                padding: 1rem;
+                transition: all ease-out .2s;
+
+                &:last-child {
+                    grid-column: 2/3;
+                }
+
+                &:hover {
+                    background-color: rgb(79, 79, 200);
+                }
+            }
+        }
+    }
+}
