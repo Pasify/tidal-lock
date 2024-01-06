@@ -4,6 +4,7 @@
     padding: 0;
     margin: 0;
     box-sizing: inherit;
+    /* outline: 2px solid red; */
 }
 
 :root {
@@ -22,8 +23,126 @@ body {
     font-family: fantasy;
 }
 
+@-webkit-keyframes shake-horizontal {
+
+    0%,
+    100% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+    }
+
+    10%,
+    30%,
+    50%,
+    70% {
+        -webkit-transform: translateX(-10px);
+        transform: translateX(-10px);
+    }
+
+    20%,
+    40%,
+    60% {
+        -webkit-transform: translateX(10px);
+        transform: translateX(10px);
+    }
+
+    80% {
+        -webkit-transform: translateX(8px);
+        transform: translateX(8px);
+    }
+
+    90% {
+        -webkit-transform: translateX(-8px);
+        transform: translateX(-8px);
+    }
+}
+
+@keyframes shake-horizontal {
+
+    0%,
+    100% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+    }
+
+    10%,
+    30%,
+    50%,
+    70% {
+        -webkit-transform: translateX(-10px);
+        transform: translateX(-10px);
+    }
+
+    20%,
+    40%,
+    60% {
+        -webkit-transform: translateX(10px);
+        transform: translateX(10px);
+    }
+
+    80% {
+        -webkit-transform: translateX(8px);
+        transform: translateX(8px);
+    }
+
+    90% {
+        -webkit-transform: translateX(-8px);
+        transform: translateX(-8px);
+    }
+}
+
+
+@-webkit-keyframes scale-up-center {
+    0% {
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+    }
+
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
+@keyframes scale-up-center {
+    0% {
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+    }
+
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
+.wrong {
+    -webkit-animation: shake-horizontal 0.8s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
+    animation: shake-horizontal 0.8s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
+}
+
+.active {
+    height: 100% !important;
+    width: 100% !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+
+    width: 0% !important;
+    height: 0% !important;
+}
+
+.scale-up-center {
+    -webkit-animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+    animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
 .container {
-    outline: 2px solid red;
+
     padding: 0 2rem;
     display: grid;
     place-items: center;
@@ -31,44 +150,131 @@ body {
     background: linear-gradient(rgb(10, 2, 60), rgb(2, 2, 35));
 
     .dial-pad {
+
         background: linear-gradient(rgb(17, 17, 77), rgb(15, 15, 89));
+        outline: 1px solid var(--color1);
+
         height: 100%;
         width: 35%;
         border-radius: 5px;
         box-shadow: var(--shadow);
 
-        padding: 1rem 4rem;
+        padding: 3rem 4rem;
         display: grid;
         grid-template-rows: 1fr 2fr;
+        position: relative;
 
-        .output-display {
+        .overlay {
+            height: 0%;
+            width: 0%;
+            visibility: hidden;
+            opacity: 0;
+            /* background: var(--color2); */
+            backdrop-filter: blur(20px);
+            z-index: 1;
+            position: absolute;
+            top: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 4rem;
+            transition: all .3s ease-in-out;
 
-            input {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                width: 2rem;
-                height: 2rem;
-                background-color: transparent;
-                border: none;
-                color: var(--color1);
-                outline: 1px solid var(--color1);
-                border-radius: 2rem;
+            .overlay-content {
+
+                height: 50%;
+                padding: 2rem;
                 text-align: center;
-                font-size: 3rem;
-                cursor: pointer;
-                caret-color: transparent;
 
-                &:focus {
-                    border: 2px solid var(--color2);
+                button {
+                    padding: 1rem 2rem;
+                    border-radius: 50px;
+                    background-color: transparent;
+                    color: var(--color1);
+                    border: none;
+                    outline: 2px solid var(--color1);
+                    text-transform: capitalize;
+                    font-size: 1.5rem;
+                    transition: all ease-in-out .2s;
+
+                    &:is(:hover) {
+                        background-color: color-mix(in srgb, var(--color1) 5%, var(--color2) 10%);
+                    }
+                }
+            }
+        }
+
+        p {
+            color: var(--color1);
+            font-size: 1.5rem;
+            font-weight: 400;
+            text-align: center;
+            height: 5rem;
+        }
+
+        .output-display {
+
+            height: 5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .passcodeInputs {
+
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                gap: 4rem;
+                transition: width .3s, height .4s, opacity .2s, visibility .1s ease-in;
+
+                input {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 2rem;
+                    height: 2rem;
+                    background-color: transparent;
+                    border: none;
+                    color: var(--color1);
+                    outline: 1px solid var(--color1);
+                    border-radius: 2rem;
+                    text-align: center;
+                    font-size: 3rem;
+                    cursor: pointer;
+                    caret-color: transparent;
+
+                    &:focus {
+                        border: 2px solid var(--color2);
+                    }
+                }
+
+                .del {
+                    background-color: color-mix(in srgb, var(--color1) 10%, var(--color2) 10%);
+                    font-size: 1rem;
+                    border: none;
+                    width: 3rem;
+                    color: var(--color1);
+                    padding: .1rem .3rem;
+                    border-radius: 1rem;
+                    cursor: pointer;
+                    clip-path: polygon(100% 0%, 100% 52%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
+                    transition: all ease-in-out .2s;
+
+                    &:is(:hover) {
+                        background-color: rgb(79, 79, 130);
+                    }
                 }
             }
 
+            .correct-icon {
+                color: var(--color1);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 4rem;
+                width: 100%;
 
+
+            }
         }
 
         .input {
@@ -76,6 +282,8 @@ body {
             grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
             place-items: center;
+
+
 
             span {
                 display: flex;
@@ -96,8 +304,16 @@ body {
                     grid-column: 2/3;
                 }
 
-                &:hover {
+                &:is(:hover) {
                     background-color: rgb(79, 79, 200);
+                    -webkit-transform: scale(1.1);
+                    transform: scale(1.1);
+                }
+
+                &:is(:active) {
+                    background-color: rgb(79, 79, 200);
+                    -webkit-transform: scale(1);
+                    transform: scale(1)
                 }
             }
         }

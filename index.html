@@ -11,11 +11,23 @@
     <body>
         <div class="container">
             <div class="dial-pad">
+                <div class="over overlay">
+                    <div class="overlay-content">
+                        <p>sorry that is not the right code</p>
+                        <button class="try-again">try again</button>
+                    </div>
+                </div>
+                <p>It's nice to see you again,<br /> please enter your passcode</p>
+                <!-- <p class="attempts">Max attempts: </p> -->
                 <div class="output-display">
-                    <input type="password" maxlength="1">
-                    <input type="password" maxlength="1">
-                    <input type="password" maxlength="1">
-                    <input type="password" maxlength="1">
+                    <div class="passcodeInputs">
+                        <input type="password" maxlength="1">
+                        <input type="password" maxlength="1">
+                        <input type="password" maxlength="1">
+                        <input type="password" maxlength="1">
+                        <button class="del">✖</button>
+                    </div>
+                    <div class="correct-icon hidden">✔</div>
                 </div>
                 <div class="input">
                 </div>

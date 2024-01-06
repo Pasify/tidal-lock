@@ -1,34 +1,100 @@
 "use strict";
 const inputContainer = document.querySelector(".input");
 const passwordInputs = document.querySelectorAll(`input`);
-let passwordInputsContainer = document.querySelector(".output-display");
-let activeInputIndex = 0;
+let passwordInputsContainer = document.querySelector(".passcodeInputs");
+let correctElement = document.querySelector(".correct-icon");
+const attemptsParagraph = document.querySelector(".attempts");
+const overlayElement = document.querySelector(".over");
+let clearButton = document.querySelector(".del");
+const tryAgainButton = document.querySelector(".try-again");
 
-// password focus functionality
-if (passwordInputs.length > 0) {
-  passwordInputs[0].focus();
-}
-// a little bit if event delegation
-passwordInputsContainer.addEventListener("input", function (e) {
-  let targetElement = e.target.closest("input");
-  if (!targetElement) return;
+let setPassCode = prompt(`
+SET NEW PASS CODE
+-----------------------------
+NB. Pass code must be numeric, and cannot be not be more than 4 digits.
 
-  // converts the node list to an actual array adn getting the index of the target element, this could be done also by spreading the array or taking a slice.
-  let currentIndex = Array.from(passwordInputs).indexOf(targetElement);
-  activeInputIndex = currentIndex;
 
-  // add focus on the next input
-  if (
-    targetElement.value.length > 0 &&
-    currentIndex < passwordInputs.length - 1
-  ) {
-    passwordInputs[currentIndex + 1].focus();
-    activeInputIndex = currentIndex + 1;
-  }
-});
+`);
+// let setPassCode = 1111;
 
-// dial pad shuffle functionality
 const dialNumberArray = Array.from({ length: 10 }, (_, item) => item);
+let activeInputIndex = 0;
+let passCode = [];
+
+let maxAttempt = 3;
+let currentAttempt = 0;
+function focusOnFirstInput() {
+  if (passwordInputs.length > 0) {
+    passwordInputs[0].focus();
+  }
+}
+
+function resetAll() {
+  overlayElement.classList.remove("active");
+  currentAttempt = 0;
+  focusOnFirstInput();
+}
+function correctAttempt() {
+  console.log(`correct password`);
+  passwordInputsContainer.classList.add("hidden");
+  correctElement.classList.remove("hidden");
+  correctElement.classList.add("scale-up-center");
+  // Reset attempt count on successful entry
+  currentAttempt = 0;
+}
+function triggerAnimation() {
+  passwordInputsContainer.classList.remove("wrong");
+  setTimeout(() => {
+    passwordInputsContainer.classList.add("wrong");
+  }, 1);
+  clearAllInputs();
+}
+function checkPassCode(code) {
+  if (code.length === passwordInputs.length) {
+    let passCodeNum = +passCode.join("");
+    if (passCodeNum === +setPassCode) {
+      correctAttempt();
+    } else {
+      currentAttempt++;
+      triggerAnimation();
+      console.log(`Wrong code. Attempts left: ${maxAttempt - currentAttempt}`);
+    }
+    if (currentAttempt >= maxAttempt) {
+      overlayElement.classList.add("active");
+      console.log(overlayElement);
+      console.log(`max attempt reached`);
+    }
+  }
+}
+
+focusOnFirstInput();
+function handleInput(digit) {
+  let numberDigit = +digit;
+  if (isNaN(numberDigit)) return;
+
+  if (currentAttempt >= maxAttempt) return;
+  if (activeInputIndex < passwordInputs.length) {
+    let activeInput = passwordInputs[activeInputIndex];
+    activeInput.value = numberDigit;
+    passCode[activeInputIndex] = numberDigit;
+
+    if (activeInputIndex < passwordInputs.length - 1) {
+      passwordInputs[activeInputIndex + 1].focus();
+      activeInputIndex++;
+    }
+    checkPassCode(passCode);
+  }
+}
+
+function clearAllInputs() {
+  passwordInputs.forEach((item) => {
+    item.value = "";
+    focusOnFirstInput();
+    activeInputIndex = 0;
+    passCode = [];
+  });
+}
+
 function shuffleNumbers(numArray) {
   let shuffledNumbersArray = [];
   let numArrayCopy = [...numArray];
@@ -45,27 +111,24 @@ function shuffleNumbers(numArray) {
   });
   return shuffledNumbersArray;
 }
+
 let shuffled = shuffleNumbers.bind(null, dialNumberArray);
 shuffled();
-// number clicks functionality
+
+passwordInputsContainer.addEventListener("keyup", function (e) {
+  handleInput(e.key);
+});
+
+clearButton.addEventListener(`click`, clearAllInputs);
+
 inputContainer.addEventListener("click", function (ev) {
   let clickedNumber = ev.target.closest("span");
   if (!clickedNumber) return;
-  if (activeInputIndex < passwordInputs.length) {
-    let activeInput = passwordInputs[activeInputIndex];
-    activeInput.value += clickedNumber.textContent;
-
-    if (
-      activeInput.value.length > 0 &&
-      activeInputIndex < passwordInputs.length - 1
-    ) {
-      passwordInputs[activeInputIndex + 1].focus();
-      activeInputIndex++; // Move to next input
-    }
-  }
+  handleInput(clickedNumber.textContent);
 });
+tryAgainButton.addEventListener("click", resetAll);
 // shuffle timer functionality
-let timer = 10 * 1000;
+let timer = 2 * 1000;
 setInterval(() => {
   shuffled();
 }, timer);
